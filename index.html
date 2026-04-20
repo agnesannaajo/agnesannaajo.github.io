@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Agnes Anna Ajo | Genomics & Bioinformatics</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #050d14;
+      --surface: #0a1a26;
+      --card: #0e2233;
+      --accent1: #00e5c0;
+      --accent2: #00a3ff;
+      --accent3: #7b61ff;
+      --text: #e8f4f8;
+      --muted: #6a8fa8;
+      --border: rgba(0,229,192,0.15);
+      --glow: rgba(0,229,192,0.2);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Syne', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Custom cursor */
+    #cursor {
+      width: 12px; height: 12px;
+      background: var(--accent1);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none;
+      z-index: 9999;
+      transition: transform 0.1s ease;
+      mix-blend-mode: screen;
+    }
+    #cursor-ring {
+      width: 36px; height: 36px;
+      border: 1.5px solid var(--accent1);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none;
+      z-index: 9998;
+      transition: transform 0.18s ease, width 0.2s, height 0.2s;
+      opacity: 0.5;
+    }
+    body:hover #cursor { transform: translate(-50%,-50%); }
+
+    /* BG grid */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,229,192,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,192,0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; width: 100%;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 4rem;
+      background: rgba(5,13,20,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      animation: fadeDown 0.8s ease forwards;
+    }
+    .nav-logo {
+      font-family: 'Space Mono', monospace;
+      color: var(--accent1);
+      font-size: 1rem;
+      letter-spacing: 0.08em;
+    }
+    .nav-links { display: flex; gap: 2.5rem; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.82rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.25s;
+    }
+    .nav-links a:hover { color: var(--accent1); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 8rem 4rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg-circle {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      pointer-events: none;
+    }
+    .hero-bg-circle.c1 {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(0,229,192,0.12), transparent 70%);
+      top: -100px; right: -100px;
+      animation: pulse 6s ease-in-out infinite;
+    }
+    .hero-bg-circle.c2 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(0,163,255,0.1), transparent 70%);
+      bottom: 50px; left: 200px;
+      animation: pulse 8s ease-in-out infinite reverse;
+    }
+
+    .hero-content { position: relative; z-index: 2; max-width: 780px; }
+
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--accent1);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      border: 1px solid var(--border);
+      padding: 0.4rem 1rem;
+      border-radius: 2px;
+      margin-bottom: 2rem;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+    .hero-tag::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--accent1);
+      border-radius: 50%;
+      animation: blink 1.4s infinite;
+    }
+
+    .hero-name {
+      font-size: clamp(3rem, 7vw, 6rem);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      animation: fadeUp 0.8s 0.35s ease both;
+    }
+    .hero-name span { color: var(--accent1); }
+
+    .hero-title {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(0.85rem, 1.5vw, 1.05rem);
+      color: var(--accent2);
+      margin: 1.2rem 0 1.8rem;
+      letter-spacing: 0.06em;
+      animation: fadeUp 0.8s 0.5s ease both;
+    }
+
+    .hero-desc {
+      font-size: 1.05rem;
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 560px;
+      animation: fadeUp 0.8s 0.65s ease both;
+    }
+
+    .hero-ctas {
+      display: flex; gap: 1rem; margin-top: 2.5rem;
+      animation: fadeUp 0.8s 0.8s ease both;
+    }
+    .btn-primary {
+      background: var(--accent1);
+      color: #050d14;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.85rem 2rem;
+      border: none; cursor: pointer;
+      border-radius: 2px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-decoration: none;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,229,192,0.35);
+    }
+    .btn-outline {
+      background: transparent;
+      color: var(--accent1);
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.85rem 2rem;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      border-radius: 2px;
+      transition: background 0.2s, border-color 0.2s;
+      text-decoration: none;
+    }
+    .btn-outline:hover {
+      background: var(--glow);
+      border-color: var(--accent1);
+    }
+
+    .dna-scroll {
+      position: absolute; right: 6rem; top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.18;
+      animation: floatY 6s ease-in-out infinite;
+    }
+
+    /* SECTIONS */
+    section {
+      padding: 7rem 4rem;
+      position: relative; z-index: 1;
+    }
+
+    .section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent1);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+      display: flex; align-items: center; gap: 0.8rem;
+    }
+    .section-label::after {
+      content: ''; flex: 1; max-width: 60px;
+      height: 1px; background: var(--accent1); opacity: 0.4;
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 3.5rem;
+      line-height: 1.1;
+    }
+    .section-title em { color: var(--accent1); font-style: normal; }
+
+    /* ABOUT */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    .about-text p {
+      color: var(--muted);
+      line-height: 1.85;
+      font-size: 1rem;
+      margin-bottom: 1.2rem;
+    }
+    .about-text p strong { color: var(--accent1); font-weight: 600; }
+    .info-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.5rem 2rem;
+      margin-top: 1.5rem;
+    }
+    .info-row {
+      display: flex; gap: 1rem; align-items: flex-start;
+      padding: 0.7rem 0;
+      border-bottom: 1px solid rgba(0,229,192,0.07);
+      font-size: 0.9rem;
+    }
+    .info-row:last-child { border-bottom: none; }
+    .info-row .label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent1);
+      letter-spacing: 0.1em;
+      min-width: 90px;
+      padding-top: 0.05rem;
+    }
+    .info-row .val { color: var(--text); }
+
+    .dna-visual {
+      display: flex; justify-content: center; align-items: center;
+      height: 380px;
+      position: relative;
+    }
+
+    /* EXPERTISE */
+    .expertise-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+    .exp-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2rem;
+      transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .exp-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 3px; height: 0;
+      background: var(--accent1);
+      transition: height 0.35s ease;
+    }
+    .exp-card:hover::before { height: 100%; }
+    .exp-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(0,229,192,0.35);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.3);
+    }
+    .exp-icon {
+      font-size: 2rem; margin-bottom: 1.2rem;
+    }
+    .exp-card h3 {
+      font-size: 1.1rem; font-weight: 700;
+      margin-bottom: 0.7rem;
+      color: var(--text);
+    }
+    .exp-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.7; }
+
+    /* SKILLS */
+    .skills-section { background: var(--surface); }
+    .skills-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+    }
+    .skill-group h3 {
+      font-size: 0.78rem;
+      font-family: 'Space Mono', monospace;
+      color: var(--accent2);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 1.8rem;
+    }
+    .skill-bar-wrap { margin-bottom: 1.4rem; }
+    .skill-bar-label {
+      display: flex; justify-content: space-between;
+      font-size: 0.88rem; color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .skill-bar-label span { color: var(--muted); font-size: 0.78rem; }
+    .skill-bar-track {
+      height: 4px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .skill-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent1), var(--accent2));
+      border-radius: 2px;
+      width: 0;
+      transition: width 1.5s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    .soft-skills-grid {
+      display: flex; flex-wrap: wrap; gap: 0.75rem;
+    }
+    .soft-pill {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--accent1);
+      border: 1px solid var(--border);
+      padding: 0.45rem 1rem;
+      border-radius: 100px;
+      letter-spacing: 0.08em;
+      transition: background 0.2s, border-color 0.2s;
+      cursor: default;
+    }
+    .soft-pill:hover {
+      background: var(--glow);
+      border-color: var(--accent1);
+    }
+
+    /* SEQUENCING TECH */
+    .seq-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.2rem;
+    }
+    .seq-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .seq-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px var(--glow);
+    }
+    .seq-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      color: #050d14;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 0.25rem 0.75rem;
+      border-radius: 2px;
+      margin-bottom: 0.9rem;
+    }
+    .seq-card h4 {
+      font-size: 0.95rem;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .seq-card p { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
+
+    /* CONTACT */
+    .contact-section {
+      background: var(--surface);
+      text-align: center;
+    }
+    .contact-section .section-label { justify-content: center; }
+    .contact-section .section-label::after { display: none; }
+    .contact-email {
+      font-size: clamp(1.2rem, 3vw, 2rem);
+      font-family: 'Space Mono', monospace;
+      color: var(--accent1);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.3rem;
+      transition: border-color 0.2s, color 0.2s;
+      display: inline-block;
+      margin-bottom: 2.5rem;
+    }
+    .contact-email:hover { color: var(--text); border-color: var(--text); }
+    .contact-p {
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 500px;
+      margin: 0 auto 2rem;
+      line-height: 1.75;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 2rem 4rem;
+      border-top: 1px solid var(--border);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+    footer span { color: var(--accent1); }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.7; transform: scale(1.06); }
+    }
+    @keyframes floatY {
+      0%, 100% { transform: translateY(-50%) translateX(0); }
+      50%       { transform: translateY(calc(-50% - 18px)) translateX(0); }
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; } 50% { opacity: 0.2; }
+    }
+    @keyframes rotateDNA {
+      from { transform: rotateY(0deg); }
+      to   { transform: rotateY(360deg); }
+    }
+    @keyframes drawIn {
+      from { stroke-dashoffset: 600; }
+      to   { stroke-dashoffset: 0; }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero { padding: 7rem 1.5rem 3rem; }
+      section { padding: 5rem 1.5rem; }
+      .about-grid, .skills-layout { grid-template-columns: 1fr; gap: 2.5rem; }
+      .dna-scroll { display: none; }
+      .hero-ctas { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">// AGNES.A.AJO</div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#expertise">Expertise</a>
+    <a href="#skills">Skills</a>
+    <a href="#technologies">Technologies</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg-circle c1"></div>
+  <div class="hero-bg-circle c2"></div>
+
+  <div class="hero-content">
+    <div class="hero-tag">B.Tech Biotechnology · Genomics Researcher</div>
+    <h1 class="hero-name">Agnes<br/><span>Anna Ajo</span></h1>
+    <p class="hero-title">Genomics &nbsp;·&nbsp; Sequencing Technologies &nbsp;·&nbsp; Bioinformatics &nbsp;·&nbsp; Data Science</p>
+    <p class="hero-desc">
+      Decoding the language of life — one base pair at a time. Pursuing B.Tech Biotechnology at Manav Rachna International Institute of Research and Studies, with a deep passion for core genomics, next-generation sequencing, and computational biology.
+    </p>
+    <div class="hero-ctas">
+      <a href="#expertise" class="btn-primary">Explore My Work</a>
+      <a href="#contact" class="btn-outline">Get In Touch</a>
+    </div>
+  </div>
+
+  <!-- DNA SVG -->
+  <div class="dna-scroll">
+    <svg width="90" height="420" viewBox="0 0 90 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="dnaGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#00e5c0"/>
+          <stop offset="100%" stop-color="#00a3ff"/>
+        </linearGradient>
+      </defs>
+      <!-- Left strand -->
+      <path d="M 20 10 C 20 40, 70 60, 70 90 C 70 120, 20 140, 20 170 C 20 200, 70 220, 70 250 C 70 280, 20 300, 20 330 C 20 360, 70 380, 70 410"
+        stroke="url(#dnaGrad)" stroke-width="2.5" fill="none" stroke-dasharray="600" style="animation: drawIn 2.5s ease forwards;"/>
+      <!-- Right strand -->
+      <path d="M 70 10 C 70 40, 20 60, 20 90 C 20 120, 70 140, 70 170 C 70 200, 20 220, 20 250 C 20 280, 70 300, 70 330 C 70 360, 20 380, 20 410"
+        stroke="url(#dnaGrad)" stroke-width="2.5" fill="none" opacity="0.6" stroke-dasharray="600" style="animation: drawIn 2.5s 0.4s ease forwards;"/>
+      <!-- Rungs -->
+      <line x1="20" y1="90" x2="70" y2="90" stroke="#00e5c0" stroke-width="1.5" opacity="0.5"/>
+      <line x1="45" y1="50" x2="45" y2="50" stroke="#00e5c0" stroke-width="1.5" opacity="0.5"/>
+      <line x1="20" y1="170" x2="70" y2="170" stroke="#00e5c0" stroke-width="1.5" opacity="0.5"/>
+      <line x1="20" y1="250" x2="70" y2="250" stroke="#00e5c0" stroke-width="1.5" opacity="0.5"/>
+      <line x1="20" y1="330" x2="70" y2="330" stroke="#00e5c0" stroke-width="1.5" opacity="0.5"/>
+      <!-- Nodes -->
+      <circle cx="20" cy="90"  r="4" fill="#00e5c0" opacity="0.8"/>
+      <circle cx="70" cy="90"  r="4" fill="#00a3ff" opacity="0.8"/>
+      <circle cx="70" cy="170" r="4" fill="#00e5c0" opacity="0.8"/>
+      <circle cx="20" cy="170" r="4" fill="#00a3ff" opacity="0.8"/>
+      <circle cx="20" cy="250" r="4" fill="#00e5c0" opacity="0.8"/>
+      <circle cx="70" cy="250" r="4" fill="#00a3ff" opacity="0.8"/>
+      <circle cx="70" cy="330" r="4" fill="#00e5c0" opacity="0.8"/>
+      <circle cx="20" cy="330" r="4" fill="#00a3ff" opacity="0.8"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">About Me</div>
+  <div class="about-grid">
+    <div class="about-text">
+      <h2 class="section-title">Passionate about <em>genomic science</em></h2>
+      <p>
+        I'm Agnes Anna Ajo, a B.Tech Biotechnology student at <strong>Manav Rachna International Institute of Research and Studies</strong>, driven by an unwavering passion for genomics and the computational tools that make sense of biological data.
+      </p>
+      <p>
+        My academic journey is anchored in understanding the genome at its deepest level — from the molecular mechanisms of <strong>DNA sequencing</strong> to large-scale <strong>bioinformatics pipelines</strong> that transform raw reads into biological insights.
+      </p>
+      <p>
+        I thrive at the intersection of biology, statistics, and data science, believing that the future of medicine and life sciences lies in our ability to interpret genomic data with precision and purpose.
+      </p>
+      <div class="info-card">
+        <div class="info-row">
+          <span class="label">DEGREE</span>
+          <span class="val">B.Tech Biotechnology</span>
+        </div>
+        <div class="info-row">
+          <span class="label">INSTITUTE</span>
+          <span class="val">MRIIRS, Faridabad</span>
+        </div>
+        <div class="info-row">
+          <span class="label">FOCUS</span>
+          <span class="val">Core Genomics & Bioinformatics</span>
+        </div>
+        <div class="info-row">
+          <span class="label">DOMAIN</span>
+          <span class="val">Sequencing · Data Handling · Statistics</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Animated circular DNA diagram -->
+    <div class="dna-visual">
+      <svg width="340" height="340" viewBox="0 0 340 340">
+        <defs>
+          <radialGradient id="rg1" cx="50%" cy="50%">
+            <stop offset="0%"   stop-color="rgba(0,229,192,0.15)"/>
+            <stop offset="100%" stop-color="transparent"/>
+          </radialGradient>
+        </defs>
+        <!-- Rings -->
+        <circle cx="170" cy="170" r="150" fill="none" stroke="rgba(0,229,192,0.06)" stroke-width="1"/>
+        <circle cx="170" cy="170" r="120" fill="none" stroke="rgba(0,229,192,0.06)" stroke-width="1"/>
+        <circle cx="170" cy="170" r="80"  fill="none" stroke="rgba(0,229,192,0.06)" stroke-width="1"/>
+        <circle cx="170" cy="170" r="38"  fill="url(#rg1)"/>
+        <circle cx="170" cy="170" r="38"  fill="none" stroke="rgba(0,229,192,0.3)" stroke-width="1.5"/>
+        <!-- Center text -->
+        <text x="170" y="164" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#00e5c0" letter-spacing="1">GENOME</text>
+        <text x="170" y="180" text-anchor="middle" font-family="Space Mono" font-size="7" fill="#6a8fa8">EXPLORER</text>
+        <!-- Orbiting nodes -->
+        <g id="orbit1" style="animation: rotateDNA 12s linear infinite; transform-origin: 170px 170px;">
+          <circle cx="170" cy="20"  r="7" fill="#00e5c0" opacity="0.9"/>
+          <circle cx="320" cy="170" r="7" fill="#00a3ff" opacity="0.9"/>
+          <circle cx="170" cy="320" r="7" fill="#7b61ff" opacity="0.9"/>
+          <circle cx="20"  cy="170" r="7" fill="#00e5c0" opacity="0.9"/>
+        </g>
+        <g id="orbit2" style="animation: rotateDNA 8s linear infinite reverse; transform-origin: 170px 170px;">
+          <circle cx="170" cy="50"  r="5" fill="#00a3ff" opacity="0.7"/>
+          <circle cx="290" cy="170" r="5" fill="#00e5c0" opacity="0.7"/>
+          <circle cx="170" cy="290" r="5" fill="#00a3ff" opacity="0.7"/>
+          <circle cx="50"  cy="170" r="5" fill="#7b61ff" opacity="0.7"/>
+        </g>
+        <!-- Labels around ring -->
+        <text x="170" y="8"   text-anchor="middle" font-family="Syne" font-size="9" fill="#00e5c0" font-weight="700">GENOMICS</text>
+        <text x="332" y="174" text-anchor="start"  font-family="Syne" font-size="9" fill="#00a3ff" font-weight="700">NGS</text>
+        <text x="170" y="338" text-anchor="middle" font-family="Syne" font-size="9" fill="#7b61ff" font-weight="700">BIOINFO</text>
+        <text x="0"   cy="174" text-anchor="end" font-family="Syne" font-size="9" fill="#00e5c0" font-weight="700" y="174" x="8">STATS</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERTISE -->
+<section id="expertise" style="background: var(--surface);">
+  <div class="section-label">Areas of Expertise</div>
+  <h2 class="section-title">What I <em>love</em> doing</h2>
+  <div class="expertise-grid">
+    <div class="exp-card reveal">
+      <div class="exp-icon">🧬</div>
+      <h3>Core Genomics</h3>
+      <p>Deep understanding of genome structure, function, and variation. From gene expression to epigenetics and structural genomics — decoding the blueprint of life.</p>
+    </div>
+    <div class="exp-card reveal" style="transition-delay:0.1s">
+      <div class="exp-icon">🔬</div>
+      <h3>Sequencing Technologies</h3>
+      <p>Proficient in NGS platforms including Illumina, PacBio SMRT, and Oxford Nanopore. Understanding the full pipeline from library prep to raw read generation.</p>
+    </div>
+    <div class="exp-card reveal" style="transition-delay:0.2s">
+      <div class="exp-icon">💻</div>
+      <h3>Bioinformatics</h3>
+      <p>Applying computational tools (BLAST, GATK, Bowtie2, SAMtools) for sequence alignment, variant calling, and genomic annotation at scale.</p>
+    </div>
+    <div class="exp-card reveal" style="transition-delay:0.3s">
+      <div class="exp-icon">📊</div>
+      <h3>Data Handling</h3>
+      <p>Managing large-scale biological datasets with Python and R. Skilled in data wrangling, pipeline automation, and reproducible analysis workflows.</p>
+    </div>
+    <div class="exp-card reveal" style="transition-delay:0.4s">
+      <div class="exp-icon">📈</div>
+      <h3>Statistics & Genomics</h3>
+      <p>Applying biostatistical methods to genomic data: population genetics, GWAS, differential expression analysis, and multivariate statistics.</p>
+    </div>
+    <div class="exp-card reveal" style="transition-delay:0.5s">
+      <div class="exp-icon">🧪</div>
+      <h3>Biotechnology Core</h3>
+      <p>Strong foundation in molecular biology — PCR, gel electrophoresis, cloning, CRISPR fundamentals — bridging wet lab with computational approaches.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section class="skills-section" id="skills">
+  <div class="section-label">Skills & Competencies</div>
+  <h2 class="section-title">Technical &amp; <em>Personal</em> Skills</h2>
+  <div class="skills-layout">
+    <div class="skill-group reveal">
+      <h3>Technical Proficiency</h3>
+      <div class="skill-bar-wrap">
+        <div class="skill-bar-label">Core Genomics <span>95%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="95"></div></div>
+      </div>
+      <div class="skill-bar-wrap">
+        <div class="skill-bar-label">Sequencing Technologies <span>88%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="88"></div></div>
+      </div>
+      <div class="skill-bar-wrap">
+        <div class="skill-bar-label">Bioinformatics <span>85%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="85"></div></div>
+      </div>
+      <div class="skill-bar-wrap">
+        <div class="skill-bar-label">Data Handling & Analysis <span>82%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="82"></div></div>
+      </div>
+      <div class="skill-bar-wrap">
+        <div class="skill-bar-label">Statistics & Genomics <span>80%</span></div>
+        <div class="skill-bar-track"><div class="skill-bar-fill" data-width="80"></div></div>
+      </div>
+    </div>
+    <div class="skill-group reveal" style="transition-delay:0.2s">
+      <h3>Professional Strengths</h3>
+      <div class="soft-skills-grid" id="softSkills">
+        <div class="soft-pill">🧭 Leadership</div>
+        <div class="soft-pill">🔄 Adaptability</div>
+        <div class="soft-pill">⏱ Time Management</div>
+        <div class="soft-pill">✅ Accountability</div>
+        <div class="soft-pill">⚖️ Ethical Responsibility</div>
+        <div class="soft-pill">🧩 Problem Solving</div>
+        <div class="soft-pill">🤝 Collaboration</div>
+        <div class="soft-pill">🎯 Goal-Oriented</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SEQUENCING TECHNOLOGIES -->
+<section id="technologies">
+  <div class="section-label">Technologies I Work With</div>
+  <h2 class="section-title">Sequencing <em>Platforms</em></h2>
+  <div class="seq-grid">
+    <div class="seq-card reveal">
+      <div class="seq-badge">2nd GEN</div>
+      <h4>Illumina NGS</h4>
+      <p>Short-read sequencing for WGS, RNA-seq, ChIP-seq, and amplicon panels with high accuracy and throughput.</p>
+    </div>
+    <div class="seq-card reveal" style="transition-delay:0.1s">
+      <div class="seq-badge">3rd GEN</div>
+      <h4>PacBio SMRT</h4>
+      <p>Long-read single molecule real-time sequencing for structural variant detection and de novo assembly.</p>
+    </div>
+    <div class="seq-card reveal" style="transition-delay:0.2s">
+      <div class="seq-badge">NANOPORE</div>
+      <h4>Oxford Nanopore</h4>
+      <p>Ultra-long reads with real-time sequencing for field applications, metagenomics, and direct RNA sequencing.</p>
+    </div>
+    <div class="seq-card reveal" style="transition-delay:0.3s">
+      <div class="seq-badge">ANALYSIS</div>
+      <h4>GATK & Variant Calling</h4>
+      <p>Genome Analysis Toolkit for SNP/InDel calling, genotyping, and somatic variant detection pipelines.</p>
+    </div>
+    <div class="seq-card reveal" style="transition-delay:0.4s">
+      <div class="seq-badge">ALIGN</div>
+      <h4>BWA / Bowtie2</h4>
+      <p>Reference-based short read alignment tools for mapping genomic reads with speed and accuracy.</p>
+    </div>
+    <div class="seq-card reveal" style="transition-delay:0.5s">
+      <div class="seq-badge">PIPELINE</div>
+      <h4>Python & R</h4>
+      <p>Bioinformatics scripting using Biopython, pandas, ggplot2, DESeq2 for automated genomic data workflows.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="section-label">Contact</div>
+  <h2 class="section-title">Let's <em>Connect</em></h2>
+  <p class="contact-p">
+    Open to research collaborations, internship opportunities, and conversations around genomics, bioinformatics, and the future of precision medicine.
+  </p>
+  <a href="mailto:agnesannaajo@gmail.com" class="contact-email">agnesannaajo@gmail.com</a>
+  <br/>
+  <div style="display:flex; gap:1rem; justify-content:center; margin-top:0.5rem;">
+    <a href="#" class="btn-outline" style="font-size:0.78rem;">LinkedIn</a>
+    <a href="#" class="btn-outline" style="font-size:0.78rem;">GitHub</a>
+    <a href="#" class="btn-outline" style="font-size:0.78rem;">ResearchGate</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>Agnes Anna Ajo</span> &nbsp;·&nbsp; B.Tech Biotechnology &nbsp;·&nbsp; MRIIRS &nbsp;·&nbsp; Genomics & Bioinformatics &nbsp;·&nbsp; 2026
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring   = document.getElementById('cursor-ring');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top  = e.clientY + 'px';
+    cursor.style.transform = 'translate(-50%,-50%)';
+    setTimeout(() => {
+      ring.style.left = e.clientX + 'px';
+      ring.style.top  = e.clientY + 'px';
+      ring.style.transform = 'translate(-50%,-50%)';
+    }, 80);
+  });
+  document.querySelectorAll('a, button, .exp-card, .seq-card, .soft-pill').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      ring.style.width  = '52px';
+      ring.style.height = '52px';
+      ring.style.opacity = '0.8';
+    });
+    el.addEventListener('mouseleave', () => {
+      ring.style.width  = '36px';
+      ring.style.height = '36px';
+      ring.style.opacity = '0.5';
+    });
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Skill bar animation on scroll
+  const skillBars = document.querySelectorAll('.skill-bar-fill');
+  const barObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const fill = entry.target;
+        const width = fill.getAttribute('data-width');
+        fill.style.width = width + '%';
+        barObserver.unobserve(fill);
+      }
+    });
+  }, { threshold: 0.3 });
+  skillBars.forEach(bar => barObserver.observe(bar));
+
+  // Smooth scroll for nav links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  // Particle trail on mouse
+  function spawnParticle(x, y) {
+    const p = document.createElement('div');
+    p.style.cssText = `
+      position:fixed; left:${x}px; top:${y}px;
+      width:4px; height:4px; border-radius:50%;
+      background:rgba(0,229,192,0.6);
+      pointer-events:none; z-index:9997;
+      transform:translate(-50%,-50%);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    `;
+    document.body.appendChild(p);
+    setTimeout(() => {
+      p.style.opacity = '0';
+      p.style.transform = `translate(calc(-50% + ${(Math.random()-0.5)*30}px), calc(-50% + ${(Math.random()-0.5)*30}px)) scale(0)`;
+    }, 10);
+    setTimeout(() => p.remove(), 620);
+  }
+  let lastParticle = 0;
+  document.addEventListener('mousemove', e => {
+    if (Date.now() - lastParticle > 60) {
+      spawnParticle(e.clientX, e.clientY);
+      lastParticle = Date.now();
+    }
+  });
+</script>
+</body>
+</html>
