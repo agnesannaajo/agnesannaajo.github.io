@@ -1,0 +1,752 @@
+/* ================================================
+   AGNES ANNA AJO — Portfolio Stylesheet
+   Theme: Dark Genomics / Bioinformatics Aesthetic
+   ================================================ */
+
+/* ── Google Fonts Import ── */
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap');
+
+/* ════════════════════════════════════════
+   1. CSS VARIABLES (Design Tokens)
+════════════════════════════════════════ */
+:root {
+  --bg:       #050d14;
+  --surface:  #0a1a26;
+  --card:     #0e2233;
+  --accent1:  #00e5c0;   /* teal / primary glow   */
+  --accent2:  #00a3ff;   /* blue / secondary       */
+  --accent3:  #7b61ff;   /* violet / tertiary      */
+  --text:     #e8f4f8;
+  --muted:    #6a8fa8;
+  --border:   rgba(0, 229, 192, 0.15);
+  --glow:     rgba(0, 229, 192, 0.20);
+}
+
+/* ════════════════════════════════════════
+   2. RESET & BASE
+════════════════════════════════════════ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Syne', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── Background Grid Overlay ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 229, 192, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 229, 192, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ════════════════════════════════════════
+   3. CUSTOM CURSOR
+════════════════════════════════════════ */
+#cursor {
+  width: 12px;
+  height: 12px;
+  background: var(--accent1);
+  border-radius: 50%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.1s ease;
+  mix-blend-mode: screen;
+}
+
+#cursor-ring {
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid var(--accent1);
+  border-radius: 50%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9998;
+  transition: transform 0.18s ease, width 0.2s, height 0.2s;
+  opacity: 0.5;
+}
+
+body:hover #cursor {
+  transform: translate(-50%, -50%);
+}
+
+/* ════════════════════════════════════════
+   4. NAVIGATION
+════════════════════════════════════════ */
+nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 4rem;
+  background: rgba(5, 13, 20, 0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  z-index: 100;
+  animation: fadeDown 0.8s ease forwards;
+}
+
+.nav-logo {
+  font-family: 'Space Mono', monospace;
+  color: var(--accent1);
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2.5rem;
+}
+
+.nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: color 0.25s;
+}
+
+.nav-links a:hover {
+  color: var(--accent1);
+}
+
+/* ════════════════════════════════════════
+   5. HERO SECTION
+════════════════════════════════════════ */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 8rem 4rem 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Ambient glow blobs */
+.hero-bg-circle {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+}
+
+.hero-bg-circle.c1 {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(0, 229, 192, 0.12), transparent 70%);
+  top: -100px;
+  right: -100px;
+  animation: pulse 6s ease-in-out infinite;
+}
+
+.hero-bg-circle.c2 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(0, 163, 255, 0.10), transparent 70%);
+  bottom: 50px;
+  left: 200px;
+  animation: pulse 8s ease-in-out infinite reverse;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 780px;
+}
+
+/* Live status tag */
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--accent1);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  padding: 0.4rem 1rem;
+  border-radius: 2px;
+  margin-bottom: 2rem;
+  animation: fadeUp 0.8s 0.2s ease both;
+}
+
+.hero-tag::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--accent1);
+  border-radius: 50%;
+  animation: blink 1.4s infinite;
+}
+
+/* Name headline */
+.hero-name {
+  font-size: clamp(3rem, 7vw, 6rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  animation: fadeUp 0.8s 0.35s ease both;
+}
+
+.hero-name span {
+  color: var(--accent1);
+}
+
+/* Subtitle */
+.hero-title {
+  font-family: 'Space Mono', monospace;
+  font-size: clamp(0.85rem, 1.5vw, 1.05rem);
+  color: var(--accent2);
+  margin: 1.2rem 0 1.8rem;
+  letter-spacing: 0.06em;
+  animation: fadeUp 0.8s 0.5s ease both;
+}
+
+/* Description */
+.hero-desc {
+  font-size: 1.05rem;
+  color: var(--muted);
+  line-height: 1.75;
+  max-width: 560px;
+  animation: fadeUp 0.8s 0.65s ease both;
+}
+
+/* CTA buttons row */
+.hero-ctas {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  animation: fadeUp 0.8s 0.8s ease both;
+}
+
+/* DNA scroll decoration */
+.dna-scroll {
+  position: absolute;
+  right: 6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.18;
+  animation: floatY 6s ease-in-out infinite;
+}
+
+/* ════════════════════════════════════════
+   6. BUTTONS
+════════════════════════════════════════ */
+.btn-primary {
+  background: var(--accent1);
+  color: #050d14;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.85rem 2rem;
+  border: none;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0, 229, 192, 0.35);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--accent1);
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.85rem 2rem;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  border-radius: 2px;
+  transition: background 0.2s, border-color 0.2s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-outline:hover {
+  background: var(--glow);
+  border-color: var(--accent1);
+}
+
+/* ════════════════════════════════════════
+   7. SECTION COMMON STYLES
+════════════════════════════════════════ */
+section {
+  padding: 7rem 4rem;
+  position: relative;
+  z-index: 1;
+}
+
+.section-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--accent1);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.section-label::after {
+  content: '';
+  flex: 1;
+  max-width: 60px;
+  height: 1px;
+  background: var(--accent1);
+  opacity: 0.4;
+}
+
+.section-title {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 3.5rem;
+  line-height: 1.1;
+}
+
+.section-title em {
+  color: var(--accent1);
+  font-style: normal;
+}
+
+/* ════════════════════════════════════════
+   8. ABOUT SECTION
+════════════════════════════════════════ */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.about-text p {
+  color: var(--muted);
+  line-height: 1.85;
+  font-size: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.about-text p strong {
+  color: var(--accent1);
+  font-weight: 600;
+}
+
+/* Info card table */
+.info-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.5rem 2rem;
+  margin-top: 1.5rem;
+}
+
+.info-row {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid rgba(0, 229, 192, 0.07);
+  font-size: 0.9rem;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-row .label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--accent1);
+  letter-spacing: 0.1em;
+  min-width: 90px;
+  padding-top: 0.05rem;
+}
+
+.info-row .val {
+  color: var(--text);
+}
+
+/* DNA orbital visual container */
+.dna-visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 380px;
+  position: relative;
+}
+
+/* ════════════════════════════════════════
+   9. EXPERTISE CARDS
+════════════════════════════════════════ */
+.expertise-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.exp-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2rem;
+  transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animated left border on hover */
+.exp-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 0;
+  background: var(--accent1);
+  transition: height 0.35s ease;
+}
+
+.exp-card:hover::before {
+  height: 100%;
+}
+
+.exp-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0, 229, 192, 0.35);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
+}
+
+.exp-icon {
+  font-size: 2rem;
+  margin-bottom: 1.2rem;
+}
+
+.exp-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.7rem;
+  color: var(--text);
+}
+
+.exp-card p {
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+/* ════════════════════════════════════════
+   10. SKILLS SECTION
+════════════════════════════════════════ */
+.skills-section {
+  background: var(--surface);
+}
+
+.skills-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+}
+
+.skill-group h3 {
+  font-size: 0.78rem;
+  font-family: 'Space Mono', monospace;
+  color: var(--accent2);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 1.8rem;
+}
+
+/* Skill bar */
+.skill-bar-wrap {
+  margin-bottom: 1.4rem;
+}
+
+.skill-bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.88rem;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.skill-bar-label span {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.skill-bar-track {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.skill-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent1), var(--accent2));
+  border-radius: 2px;
+  width: 0;                               /* animated by JS */
+  transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Soft skill pills */
+.soft-skills-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.soft-pill {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--accent1);
+  border: 1px solid var(--border);
+  padding: 0.45rem 1rem;
+  border-radius: 100px;
+  letter-spacing: 0.08em;
+  transition: background 0.2s, border-color 0.2s;
+  cursor: default;
+}
+
+.soft-pill:hover {
+  background: var(--glow);
+  border-color: var(--accent1);
+}
+
+/* ════════════════════════════════════════
+   11. SEQUENCING TECHNOLOGY CARDS
+════════════════════════════════════════ */
+.seq-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.2rem;
+}
+
+.seq-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.seq-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px var(--glow);
+}
+
+.seq-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  color: #050d14;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 0.25rem 0.75rem;
+  border-radius: 2px;
+  margin-bottom: 0.9rem;
+}
+
+.seq-card h4 {
+  font-size: 0.95rem;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.seq-card p {
+  font-size: 0.8rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* ════════════════════════════════════════
+   12. CONTACT SECTION
+════════════════════════════════════════ */
+.contact-section {
+  background: var(--surface);
+  text-align: center;
+}
+
+.contact-section .section-label {
+  justify-content: center;
+}
+
+.contact-section .section-label::after {
+  display: none;
+}
+
+.contact-email {
+  font-size: clamp(1.2rem, 3vw, 2rem);
+  font-family: 'Space Mono', monospace;
+  color: var(--accent1);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.3rem;
+  transition: border-color 0.2s, color 0.2s;
+  display: inline-block;
+  margin-bottom: 2.5rem;
+}
+
+.contact-email:hover {
+  color: var(--text);
+  border-color: var(--text);
+}
+
+.contact-p {
+  color: var(--muted);
+  font-size: 1rem;
+  max-width: 500px;
+  margin: 0 auto 2rem;
+  line-height: 1.75;
+}
+
+/* ════════════════════════════════════════
+   13. FOOTER
+════════════════════════════════════════ */
+footer {
+  text-align: center;
+  padding: 2rem 4rem;
+  border-top: 1px solid var(--border);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+
+footer span {
+  color: var(--accent1);
+}
+
+/* ════════════════════════════════════════
+   14. SCROLL REVEAL UTILITY
+════════════════════════════════════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ════════════════════════════════════════
+   15. KEYFRAME ANIMATIONS
+════════════════════════════════════════ */
+
+/* Fade up — hero content stagger */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* Fade down — navigation bar */
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(0);     }
+}
+
+/* Pulsing glow blobs */
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1);    }
+  50%       { opacity: 0.7; transform: scale(1.06); }
+}
+
+/* DNA helix float */
+@keyframes floatY {
+  0%, 100% { transform: translateY(-50%) translateX(0);        }
+  50%       { transform: translateY(calc(-50% - 18px)) translateX(0); }
+}
+
+/* Blinking status dot */
+@keyframes blink {
+  0%, 100% { opacity: 1;   }
+  50%       { opacity: 0.2; }
+}
+
+/* Orbital ring spin — used on SVG group */
+@keyframes rotateDNA {
+  from { transform: rotateY(0deg);   }
+  to   { transform: rotateY(360deg); }
+}
+
+/* SVG stroke draw-in */
+@keyframes drawIn {
+  from { stroke-dashoffset: 600; }
+  to   { stroke-dashoffset: 0;   }
+}
+
+/* ════════════════════════════════════════
+   16. RESPONSIVE — MOBILE
+════════════════════════════════════════ */
+@media (max-width: 768px) {
+  nav {
+    padding: 1rem 1.5rem;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .hero {
+    padding: 7rem 1.5rem 3rem;
+  }
+
+  section {
+    padding: 5rem 1.5rem;
+  }
+
+  .about-grid,
+  .skills-layout {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .dna-scroll {
+    display: none;
+  }
+
+  .hero-ctas {
+    flex-direction: column;
+  }
+}
